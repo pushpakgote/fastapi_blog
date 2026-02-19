@@ -16,7 +16,7 @@ class UserResponse(UserBase):
 
 class UserUpdate(BaseModel):
     username: str|None = Field(default=None,min_length=1, max_length=50)
-    email: EmailStr = Field(default=None,max_length=120)
+    email: EmailStr = Field(default=None, max_length=120)  # ty:ignore[invalid-assignment]
     image_file: str|None = Field(default=None,min_length=1, max_length=200)
 
 
