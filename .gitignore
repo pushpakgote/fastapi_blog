@@ -6,7 +6,15 @@ dist/
 wheels/
 *.egg-info
 
+# dotenv
+.env
+
 # Virtual environments
 .venv
 
+# Media files
 media/
+
+# Database files
+*.db
+*.sqlite3
