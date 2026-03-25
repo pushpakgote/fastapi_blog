@@ -62,7 +62,7 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
     result = await db.execute(select(models.User).where(func.lower(models.User.email)==form_data.username.lower()) )
     user = result.scalars().first()
     if not user or not verify_password(form_data.password,user.password_hash):
-        return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="Incorrect username or password",headers={"WWW-Authenticate":"Bearer"})
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="Incorrect username or password",headers={"WWW-Authenticate":"Bearer"})
     
     access_token_expires = timedelta(minutes=settings.access_token_expire_minutes)
     access_token = create_access_token(data={"sub":str(user.id)},expires_delta=access_token_expires)
@@ -71,6 +71,7 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
 @router.get("/me", response_model=UserPrivate)
 async def get_current_user(current_user: CurrentUser):
     return current_user
+    
 @router.get("/{user_id}", response_model=UserPublic)
 async def get_user(user_id: int, db: Annotated[AsyncSession, Depends(get_db)]):
     result = await db.execute(select(models.User).where(models.User.id == user_id))
